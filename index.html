@@ -87,8 +87,9 @@ function qrSvg(text){
  let rects='';for(let y=0;y<n;y++)for(let x=0;x<n;x++)if(m[y][x])rects+=`<rect x="${x}" y="${y}" width="1" height="1"/>`;
  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="-1 -1 23 23" shape-rendering="crispEdges"><rect x="-1" y="-1" width="23" height="23" fill="white"/> <g fill="black">${rects}</g></svg>`;
 }
+function arrowSvg(direction){const path=direction==='down'?'M12 24 L2 10 H9 V0 H15 V10 H22 Z':'M12 0 L22 14 H15 V24 H9 V14 H2 Z';return `<svg class="direction" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true"><path d="${path}" fill="black"/></svg>`}
 function generate(){try{values=makeValues();if(!values.length)throw Error('Нет мест хранения для создания.');$('rows').innerHTML=values.map((v,i)=>`<tr><td>${i+1}</td><td>${v}</td></tr>`).join('');$('resultInfo').textContent=`Создано ${values.length.toLocaleString('ru-RU')} уникальных адресов.`;$('result').hidden=false;
- $('printArea').innerHTML=values.map(v=>`<div class="label">${qrSvg(v)}<span>${v}</span></div>`).join('');
+ $('printArea').innerHTML=values.map(v=>{const shelf=Number(v.split('.')[1]);const direction=shelf===5?'down':'up';return `<div class="label">${qrSvg(v)}${arrowSvg(direction)}<span>${v}</span></div>`}).join('');
  $('csv').disabled=false;$('print').disabled=false;$('status').className='status ok';$('status').textContent='МХ и QR-этикетки подготовлены. Данные никуда не отправлялись.';$('result').scrollIntoView({behavior:'smooth'});
  }catch(e){$('status').className='status err';$('status').textContent=e.message}}
 $('addBlock').onclick=()=>{blocks.push({from:'',to:'',shelves:'',cells:''});render();summary()};
